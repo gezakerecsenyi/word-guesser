@@ -1,17 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import './styles.scss';
+
+import firebase from 'firebase/app';
+import 'firebase/analytics';
+import { CookiesProvider } from 'react-cookie';
+
+const firebaseConfig = {
+    apiKey: 'AIzaSyDe0dC5_xW2wV3Fi0eKod5UrDL8zSo0NDo',
+    authDomain: 'shakespeare-words.firebaseapp.com',
+    projectId: 'shakespeare-words',
+    storageBucket: 'shakespeare-words.appspot.com',
+    messagingSenderId: '182545701732',
+    appId: '1:182545701732:web:b08b80cc72a6a883213871',
+    measurementId: 'G-9X02QGSXF5',
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <CookiesProvider>
+            <App />
+        </CookiesProvider>
+    </React.StrictMode>,
+    document.getElementById('root'),
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

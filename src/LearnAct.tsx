@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { normalizeString, PageProps } from './types';
+import { normalizeString, PageProps } from './utils';
 import { faUndoAlt } from '@fortawesome/free-solid-svg-icons/faUndoAlt';
 import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 import { faSun } from '@fortawesome/free-solid-svg-icons/faSun';

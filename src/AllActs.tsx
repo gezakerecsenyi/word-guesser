@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import 'firebase/firestore';
-import { PageProps } from './types';
+import { PageProps } from './utils';
 import { Link } from 'react-router-dom';
 
 export default function AllActs(

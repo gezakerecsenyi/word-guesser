@@ -4,7 +4,7 @@ import AllActs from './AllActs';
 import LearnAct from './LearnAct';
 import firebase from 'firebase/app';
 import 'firebase/app';
-import { Act, Quote } from './types';
+import { Act, Quote } from './utils';
 import Loader from 'react-loader-spinner';
 
 function App() {

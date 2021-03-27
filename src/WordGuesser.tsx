@@ -2,12 +2,15 @@ import { ReactElement, useCallback, useEffect, useState } from 'react';
 
 interface Props {
     word: string;
-    selected: boolean;
-    id: string;
-    focusser: any;
-    forceComplete: boolean;
+    selected?: boolean;
+    id?: string;
+    focusser?: any;
+    forceComplete?: boolean;
+    forceEnable?: boolean;
+    initValue?: string;
 
-    nextWord(): void;
+    nextWord?: () => void;
+    onChange?: (word: string, id?: string) => void;
 }
 
 export default function WordGuesser(
@@ -18,11 +21,21 @@ export default function WordGuesser(
         id,
         focusser,
         forceComplete,
+        forceEnable,
+        onChange,
+        initValue,
     }: Props,
 ): ReactElement {
-    const [wordSoFar, setWordSoFar] = useState('_'.repeat(word.length));
+    const [wordSoFar, setWordSoFar] = useState((initValue || '').padEnd(word.length, '_'));
     const [done, setDone] = useState(false);
     const handleType = useCallback((event) => {
+        if (event.target.value.length === 1) {
+            setWordSoFar(
+                event.target.value.padEnd(word.length, '_')
+            );
+            return;
+        }
+
         let newWord = event.target.value.replaceAll('_', '');
 
         if (event.target.value.length < wordSoFar.length) {
@@ -33,24 +46,27 @@ export default function WordGuesser(
             return;
         }
 
-        setWordSoFar(`${newWord}${'_'.repeat(word.length - newWord.length)}`);
+        const newWordText = newWord;
+        setWordSoFar(newWordText.padEnd(word.length, '_'));
 
-        if (newWord.toLowerCase() === word.toLowerCase()) {
+        onChange && onChange(newWordText, id);
+
+        if (nextWord && newWord.toLowerCase() === word.toLowerCase()) {
             nextWord();
             setDone(true);
             setWordSoFar(word);
         }
-    }, [wordSoFar, word]);
+    }, [wordSoFar, word, id]);
 
     const [awaitingFocus, setAwaitingFocus] = useState(false);
     useEffect(() => {
         if (awaitingFocus) {
-            document.getElementById(id)?.focus();
+            document.getElementById(id || '')?.focus();
             setAwaitingFocus(false);
         }
     }, [awaitingFocus]);
 
-    const disabled = done || !selected || forceComplete;
+    const disabled = !forceEnable && (done || !selected || forceComplete);
     useEffect(() => {
         setAwaitingFocus(true);
     }, [disabled, focusser]);

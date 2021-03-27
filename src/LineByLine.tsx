@@ -1,20 +1,17 @@
-import { Act, FrequencyType, normalizeString, useRandomItem } from './utils';
+import { normalizeString, useRandomItem } from './utils';
 import React, { Fragment, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons/faChevronRight';
 import WordGuesser from './WordGuesser';
+import { LearnProps } from './LearnAct';
 
-interface Props {
-    act: Act;
-    frequencies: FrequencyType;
-}
 
 export default function LineByLine(
     {
         act,
         frequencies,
-    }: Props,
+    }: LearnProps,
 ): ReactElement {
     const [item, nextItem, prevItem, textData] = useRandomItem(
         act.quotes,
@@ -72,7 +69,7 @@ export default function LineByLine(
     }, [currentWord, nextWord, text, textData, focusser, forceComplete]);
 
     useEffect(() => {
-        window.onkeydown = (event: KeyboardEvent) => {
+        const newEvent = (event: KeyboardEvent) => {
             if (event.code === 'Tab') {
                 event.stopPropagation();
                 event.preventDefault();
@@ -80,6 +77,11 @@ export default function LineByLine(
                 setForceComplete(true);
             }
         };
+        window.addEventListener('keydown', newEvent);
+
+        return () => {
+            window.removeEventListener('keydown', newEvent);
+        }
     }, []);
 
     return (

@@ -1,9 +1,31 @@
 import { useCallback, useEffect, useState } from 'react';
+import firebase from 'firebase/app';
 
 export interface Quote {
     id: string;
     text: string;
     character: string;
+}
+
+export interface Session {
+    id: string;
+    responses: {
+        data: string[]
+    }[];
+    name: string;
+}
+
+export interface TestQuestion {
+    character: string;
+    text: string;
+}
+
+export interface Test {
+    code: string;
+    id: string;
+    title: string;
+    questions: TestQuestion[];
+    locks: firebase.firestore.Timestamp;
 }
 
 export interface Act {
@@ -23,6 +45,8 @@ export interface PageProps {
 export type FrequencyType = {
     [key: string]: number,
 };
+
+export const stopwords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now', 'art', 'thou', 'shall', 'twas', 'thy', 'thine', 'thyself'];
 
 export function normalizeString(e: string): string {
     return e.replaceAll(/[^a-zA-Z\-']/g, '').toLowerCase();
@@ -97,7 +121,8 @@ export function useRandomItem<T extends { id: string }>(
         const rawWords = item.text
             .replaceAll('\n', ' ')
             .split(' ')
-            .map(normalizeString);
+            .map(normalizeString)
+            .filter((e: string) => e.length > 2);
 
         const frequenciesHere = Object.entries(frequencies).filter(e => rawWords.includes(e[0]));
         const frequencyDistribution = (i: number) => {

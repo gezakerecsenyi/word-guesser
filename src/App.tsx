@@ -53,7 +53,7 @@ function App() {
                     Loading Shakespeare's finest...
                 </h3>
             </div>
-        )
+        );
     }
 
     return (

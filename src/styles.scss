@@ -128,6 +128,17 @@ p {
                 }
             }
         }
+
+        .test-act {
+            .request-code {
+                color: white !important;
+
+                input {
+                    color: white;
+                    background-color: #1c1c1c;
+                }
+            }
+        }
     }
 
     &.light {
@@ -144,6 +155,75 @@ p {
                     &:hover {
                         color: #3c3c3c !important;
                     }
+                }
+            }
+        }
+    }
+
+    .test-act {
+        .request-code {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            width: 100vw;
+            height: calc(100vh - 80px);
+
+            input[disabled] {
+                color: #8c8c8c !important;
+            }
+
+            .act-code {
+                font-family: $script;
+                font-size: 5rem;
+                text-align: center;
+                border: none;
+                outline: none;
+                background-color: transparent !important;
+            }
+
+            .name {
+                font-family: $body;
+                font-size: 1rem;
+                font-weight: 600;
+                margin-top: 20px;
+                margin-bottom: 10px;
+                padding: 10px 20px;
+                text-align: center;
+                border: 2px solid $default;
+                border-radius: 50px;
+                width: 400px;
+                outline: none;
+                transition: border-color 150ms ease-out;
+
+                &:focus {
+                    border-color: $default-d;
+                }
+
+                @media only screen and (max-width: 500px) {
+                    width: calc(90% - 40px);
+                }
+            }
+
+            .submit-act-code {
+                background-color: $default;
+                border: none;
+                padding: 10px 20px;
+                font-family: $body;
+                font-weight: bold;
+                color: white;
+                border-radius: 5px;
+                font-size: 1rem;
+                transition: background-color 150ms ease-out;
+
+                &[disabled] {
+                    background-color: lighten(desaturate($default, 70%), 10%);
+                    cursor: not-allowed;
+                }
+
+                &:hover:not([disabled]) {
+                    cursor: pointer;
+                    background-color: $default-d;
                 }
             }
         }
@@ -181,19 +261,19 @@ p {
                 position: inherit;
                 display: block;
                 margin-top: 0;
-                padding-left: 0;
                 margin-bottom: 1.5rem;
+                padding-left: 0;
                 cursor: pointer;
                 color: inherit;
                 border: none;
                 outline: none;
 
-                @media only screen and (max-width: 500px) {
-                    margin-left: auto !important;
-                    margin-right: auto !important;
-                }
-
                 background-color: transparent;
+
+                @media only screen and (max-width: 500px) {
+                    margin-right: auto !important;
+                    margin-left: auto !important;
+                }
 
                 h5 {
                     font-family: $body;
@@ -291,15 +371,15 @@ p {
 
     .act-container {
         display: flex;
+        flex-wrap: wrap;
         width: calc(100% + 20px);
         margin-top: 10px;
         margin-left: -20px;
-        flex-wrap: wrap;
 
         .act-card {
+            display: block;
             width: 20%;
             margin-top: 20px;
-            display: block;
 
             margin-left: 20px;
             padding: 20px 50px;

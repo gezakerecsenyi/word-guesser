@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { normalizeString, PageProps } from './utils';
+import { Act, FrequencyType, normalizeString, PageProps, stopwords } from './utils';
 import { faUndoAlt } from '@fortawesome/free-solid-svg-icons/faUndoAlt';
 import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 import { faSun } from '@fortawesome/free-solid-svg-icons/faSun';
@@ -9,6 +9,9 @@ import { useCookies } from 'react-cookie';
 import { faTasks } from '@fortawesome/free-solid-svg-icons/faTasks';
 import { faQuoteRight } from '@fortawesome/free-solid-svg-icons/faQuoteRight';
 import LineByLine from './LineByLine';
+import TestAct from './TestAct';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
 enum Theme {
     Light,
@@ -18,6 +21,11 @@ enum Theme {
 enum Mode {
     LineByLine,
     Test,
+}
+
+export interface LearnProps {
+    act: Act;
+    frequencies: FrequencyType;
 }
 
 export default function LearnAct(
@@ -30,8 +38,8 @@ export default function LearnAct(
     const { actId } = useParams<{ actId: string }>();
     const act = acts.filter(act => act.id === actId)[0];
 
-    const [cookies, setCookie] = useCookies(['theme', `frequency-data-${actId}`]);
-    const [frequencies, setFrequencies] = useState(cookies[`frequency-data-${actId}`] || null);
+    const [cookies, setCookie] = useCookies(['theme', `filtered-frequency-data-${actId}`]);
+    const [frequencies, setFrequencies] = useState(cookies[`filtered-frequency-data-${actId}`] || null);
 
     const [theme, setTheme] = useState(Number(cookies.theme || Theme.Light));
     const toggleTheme = useCallback(() => {
@@ -46,6 +54,19 @@ export default function LearnAct(
 
     const [rawWords, setRawWords] = useState<string[] | null>(null);
 
+    const [onInitialAuthCheck, setOnInitialAuthCheck] = useState(true);
+    useEffect(() => {
+        firebase
+            .auth()
+            .onAuthStateChanged((user) => {
+                setOnInitialAuthCheck(false);
+
+                if (user && onInitialAuthCheck) {
+                    setMode(Mode.Test);
+                }
+            })
+    }, []);
+
     useEffect(() => {
         const words = Array.from(new Set(
             act.quotes
@@ -58,7 +79,7 @@ export default function LearnAct(
         ));
         setRawWords(words);
 
-        if (cookies[`frequency-data-${actId}`]) {
+        if (cookies[`filtered-frequency-data-${actId}`]) {
             return;
         }
 
@@ -80,11 +101,12 @@ export default function LearnAct(
                             ? parseInt(e[0].tags[0].slice(2))
                             : 1
                         ])
+                        .map(e => stopwords.includes(normalizeString(e[0] as string)) ? [e[0], 10000, e[1]] : e)
                         .filter(e => e[1] < 400),
                 );
 
                 setFrequencies(frequencies);
-                setCookie(`frequency-data-${actId}`, JSON.stringify(frequencies), {
+                setCookie(`filtered-frequency-data-${actId}`, JSON.stringify(frequencies), {
                     expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 2)
                 });
                 setLoading && setLoading(false);
@@ -114,8 +136,12 @@ export default function LearnAct(
             </div>
 
             {
-                mode === Mode.LineByLine && !loading && frequencies && rawWords && (
-                    <LineByLine act={act} frequencies={frequencies} />
+                !loading && frequencies && rawWords && (
+                    mode === Mode.LineByLine ? (
+                        <LineByLine act={act} frequencies={frequencies} />
+                    ) : (
+                        <TestAct act={act} frequencies={frequencies} />
+                    )
                 )
             }
         </div>

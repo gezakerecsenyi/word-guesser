@@ -138,6 +138,10 @@ p {
                     background-color: #1c1c1c;
                 }
             }
+
+            .test-form {
+                color: white;
+            }
         }
     }
 
@@ -158,9 +162,51 @@ p {
                 }
             }
         }
+
+        .test-form {
+            .word-guesser {
+                color: $default-d !important;
+            }
+        }
+    }
+
+    .word-guesser {
+        font-family: $script;
+        font-size: inherit;
+        width: min-content;
+        color: inherit;
+        border: none;
+        outline: none;
+        background-color: transparent;
+
+        &[disabled] {
+            color: #a5a5a5 !important;
+        }
     }
 
     .test-act {
+        button {
+            background-color: $default;
+            border: none;
+            padding: 10px 20px;
+            font-family: $body;
+            font-weight: bold;
+            color: white;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 150ms ease-out;
+
+            &[disabled] {
+                background-color: lighten(desaturate($default, 70%), 10%);
+                cursor: not-allowed;
+            }
+
+            &:hover:not([disabled]) {
+                cursor: pointer;
+                background-color: $default-d;
+            }
+        }
+
         .request-code {
             display: flex;
             align-items: center;
@@ -204,26 +250,50 @@ p {
                     width: calc(90% - 40px);
                 }
             }
+        }
 
-            .submit-act-code {
-                background-color: $default;
-                border: none;
-                padding: 10px 20px;
-                font-family: $body;
-                font-weight: bold;
-                color: white;
-                border-radius: 5px;
-                font-size: 1rem;
-                transition: background-color 150ms ease-out;
+        .test-form {
+            padding: 10px 50px;
 
-                &[disabled] {
-                    background-color: lighten(desaturate($default, 70%), 10%);
-                    cursor: not-allowed;
-                }
+            @media only screen and (max-width: 500px) {
+                padding: 10px 25px;
+            }
 
-                &:hover:not([disabled]) {
-                    cursor: pointer;
-                    background-color: $default-d;
+            .test-title {
+                font-size: 3rem;
+                margin-top: 1rem;
+                margin-bottom: 0;
+            }
+
+            .question-container {
+                .question {
+                    margin-top: 40px;
+
+                    .character {
+                        font-family: $script;
+                        font-size: 2rem;
+                        margin-bottom: 5px;
+                    }
+
+                    .text {
+                        margin-top: 8px;
+                        font-family: $script;
+                        font-size: 1.25rem;
+
+                        br {
+                            display: block;
+                            margin-bottom: 2px;
+                            content: " ";
+
+                            @media only screen and (max-width: 500px) {
+                                margin-bottom: 8px;
+                            }
+                        }
+
+                        .word-guesser {
+                            color: $default;
+                        }
+                    }
                 }
             }
         }
@@ -309,20 +379,6 @@ p {
                     display: block;
                     margin-bottom: 6px;
                     content: " ";
-                }
-
-                .word-guesser {
-                    font-family: $script;
-                    font-size: inherit;
-                    width: min-content;
-                    color: inherit;
-                    border: none;
-                    outline: none;
-                    background-color: transparent;
-
-                    &[disabled] {
-                        color: #a5a5a5 !important;
-                    }
                 }
             }
         }

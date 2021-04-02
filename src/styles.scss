@@ -290,6 +290,10 @@ p {
                             }
                         }
 
+                        em {
+                            color: #a5a5a5 !important;
+                        }
+
                         .word-guesser {
                             color: $default;
                         }
@@ -374,6 +378,11 @@ p {
             .text {
                 font-family: $script;
                 font-weight: lighter;
+
+                em {
+                    color: #a5a5a5 !important;
+                    user-select: none;
+                }
 
                 br {
                     display: block;

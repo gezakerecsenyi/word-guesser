@@ -22,6 +22,8 @@ export default function LineByLine(
         },
     );
 
+    console.log(item, act.quotes);
+
     const text = item.text
         .split('\n')
         .map((e, i) => <Fragment key={i}>{e}<br /></Fragment>);
@@ -115,6 +117,14 @@ export default function LineByLine(
                     </h5>
                 </button>
                 <p className='text'>
+                    {
+                        item.preceeding && (
+                            <em>
+                                [{item.preceeding}]&nbsp;
+                            </em>
+                        )
+                    }
+
                     {
                         boxifiedText
                     }

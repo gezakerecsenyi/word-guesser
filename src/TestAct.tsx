@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
-import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { LearnProps } from './LearnAct';
 import { Session, Test } from './utils';
 import WordGuesser from './WordGuesser';
@@ -222,7 +222,8 @@ export default function TestAct(
     const submitAnswers = useCallback(() => {
         firebase
             .auth()
-            .signOut();
+            .currentUser
+            ?.delete();
     }, []);
 
     const [currentTimeout, setCurrentTimeout] = useState<number | null>(null);
@@ -342,6 +343,14 @@ export default function TestAct(
                                         </h2>
 
                                         <p className='text'>
+                                            {
+                                                question.preceeding && (
+                                                    <em>
+                                                        [{question.preceeding}]&nbsp;
+                                                    </em>
+                                                )
+                                            }
+
                                             {
                                                 questionList[Q].flat()
                                             }

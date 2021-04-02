@@ -5,6 +5,7 @@ export interface Quote {
     id: string;
     text: string;
     character: string;
+    preceeding?: string;
 }
 
 export interface Session {
@@ -17,6 +18,7 @@ export interface Session {
 
 export interface TestQuestion {
     character: string;
+    preceeding?: string;
     text: string;
 }
 
@@ -111,7 +113,7 @@ export const getRandomItem = <T extends { id: string }>(array: T[], prevItems: s
     return cleanedArr[index];
 };
 
-export function useRandomItem<T extends { id: string }>(
+export function useRandomItem<T extends { id: string, text: string }>(
     array: T[],
     frequencies: FrequencyType,
     callback?: () => void,

@@ -30,6 +30,7 @@ function App() {
                                     .then(Q => Q.docs.map(V => ({
                                         text: (V.data() as Quote).text.replace(/\\n/g, '\n'),
                                         character: V.data().character,
+                                        preceeding: V.data().preceeding,
                                         id: V.id,
                                     }))),
                             } as Act
